@@ -26,8 +26,11 @@ Install with [npm](https://www.npmjs.com/)
 $ npm i base-store --save
 ```
 
-## Related projects
+## Other plugins
 
+Other plugins for extending [base-methods](https://github.com/jonschlinkert/base-methods):
+
+* [base-cli](https://www.npmjs.com/package/base-cli): Plugin for base-methods that adds a CLI for all built-in methods, as well as methods… [more](https://www.npmjs.com/package/base-cli) | [homepage](https://github.com/jonschlinkert/base-cli)
 * [base-data](https://www.npmjs.com/package/base-data): adds a `data` method to base-methods. | [homepage](https://github.com/jonschlinkert/base-data)
 * [base-methods](https://www.npmjs.com/package/base-methods): Starter for creating a node.js application with a handful of common methods, like `set`, `get`,… [more](https://www.npmjs.com/package/base-methods) | [homepage](https://github.com/jonschlinkert/base-methods)
 * [base-options](https://www.npmjs.com/package/base-options): Adds a few options methods to base-methods, like `option`, `enable` and `disable`. See the readme… [more](https://www.npmjs.com/package/base-options) | [homepage](https://github.com/jonschlinkert/base-options)
