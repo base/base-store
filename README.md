@@ -1,6 +1,6 @@
 # base-store [![NPM version](https://badge.fury.io/js/base-store.svg)](http://badge.fury.io/js/base-store)
 
-> base-methods plugin for getting and persisting config values. Adds a 'store' object that has all of the methods from the data-store library.
+> Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library.
 
 For example, by adding this plugin you can do this:
 
