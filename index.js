@@ -10,9 +10,7 @@
 var utils = require('./utils');
 
 module.exports = function (name, options) {
-  if (typeof name !== 'string') {
-    throw new Error('expected store name to be a string.');
-  }
+  name = name || utils.project(process.cwd());
 
   return function (app) {
     var opts = utils.extend({}, options, app.options.store);

@@ -25,16 +25,9 @@ describe('store', function () {
     assert(base.store instanceof Store);
   });
 
-  it('should throw an error if name is not passed', function (cb) {
-    try {
-      store()
-      cb(new Error('expected an error'));
-    } catch(err) {
-      assert(err);
-      assert(err.message);
-      assert(err.message === 'expected store name to be a string.');
-      cb();
-    }
+  it('should detect store name if not passed:', function () {
+    base.use(store());
+    assert(base.store.name === 'base-store');
   });
 
   it('should create a store with the given `name`', function () {

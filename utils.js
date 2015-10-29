@@ -26,6 +26,7 @@ require = utils;
 
 require('data-store', 'store');
 require('extend-shallow', 'extend');
+require('project-name', 'project');
 
 /**
  * Restore `require`
