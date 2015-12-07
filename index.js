@@ -10,11 +10,19 @@
 var utils = require('./utils');
 
 module.exports = function (name, options) {
+  if (typeof name !== 'string') {
+    options = name;
+    name = null;
+  }
+
   name = name || utils.project(process.cwd());
 
-  return function (app) {
+  return function(app) {
     var opts = utils.extend({}, options, app.options.store);
     this.define('store', utils.store(name, opts));
-    return this;
-  };
+
+    this.store.create = function(name, options) {
+      return utils.store(name, options);
+    };
+  }
 };

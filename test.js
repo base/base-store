@@ -177,6 +177,27 @@ describe('store', function () {
   });
 });
 
+describe('create', function () {
+  beforeEach(function () {
+    base.use(store('abc'));
+  });
+
+  afterEach(function () {
+    base.store.data = {};
+    base.store.del({force: true});
+  });
+
+  it('should expose a `create` method', function() {
+    assert.equal(typeof base.store.create, 'function');
+  });
+
+  it('should create a new store with the given name', function() {
+    var store = base.store.create('base-store/create-test');
+    assert(store.name === 'base-store/create-test');
+    store.del({force: true});
+  });
+});
+
 describe('events', function () {
   beforeEach(function () {
     base.use(store('abc'));
