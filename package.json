@@ -1,6 +1,6 @@
 {
   "name": "base-store",
-  "description": "Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library.",
+  "description": "Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library. Also now supports sub-stores!",
   "version": "0.3.0",
   "homepage": "https://github.com/jonschlinkert/base-store",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -23,11 +23,11 @@
   "dependencies": {
     "data-store": "^0.12.0",
     "extend-shallow": "^2.0.1",
-    "lazy-cache": "^0.2.4",
+    "lazy-cache": "^1.0.2",
     "project-name": "^0.2.3"
   },
   "devDependencies": {
-    "base-methods": "^0.4.1",
+    "base-methods": "^0.6.1",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.0.0",
     "gulp-istanbul": "^0.10.2",
@@ -49,15 +49,22 @@
     "store"
   ],
   "verb": {
+    "layout": "default",
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "toc": {
+      "insert": true
+    },
     "related": {
+      "description": "Other plugins for extending [base-methods][]:",
       "list": [
         "base-cli",
         "base-data",
         "base-methods",
         "base-options",
         "base-plugins"
-      ],
-      "description": "Other plugins for extending [base-methods][]:"
+      ]
     },
     "reflinks": [
       "base-methods"
