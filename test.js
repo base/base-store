@@ -180,6 +180,9 @@ describe('store', function () {
 describe('create', function () {
   beforeEach(function () {
     base.use(store('abc'));
+
+    // init the actual store json file
+    base.store.set('a', 'b');
   });
 
   afterEach(function () {
@@ -194,7 +197,36 @@ describe('create', function () {
   it('should create a new store with the given name', function() {
     var store = base.store.create('base-store/create-test');
     assert(store.name === 'base-store/create-test');
-    store.del({force: true});
+  });
+
+  it('should add a store object to store[name]', function() {
+    base.store.create('foo');
+    assert.equal(typeof base.store.foo, 'object');
+    assert.equal(typeof base.store.foo.set, 'function');
+    base.store.foo.del({force: true});
+  });
+
+  it('should save the store in a namespaced directory under the parent', function() {
+    base.store.create('foo');
+    var dir = path.dirname(base.store.path);
+
+    assert.equal(base.store.foo.path, path.join(dir, 'abc/foo.json'));
+    base.store.foo.set('a', 'b');
+    base.store.foo.del({force: true});
+  });
+
+  it('should set values on the custom store', function() {
+    base.store.create('foo');
+    base.store.foo.set('a', 'b');
+    assert(base.store.foo.data.a === 'b');
+    base.store.foo.del({force: true});
+  });
+
+  it('should get values from the custom store', function() {
+    base.store.create('foo');
+    base.store.foo.set('a', 'b');
+    assert(base.store.foo.get('a') === 'b');
+    base.store.foo.del({force: true});
   });
 });
 
