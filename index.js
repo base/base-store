@@ -10,7 +10,7 @@
 var path = require('path');
 var utils = require('./utils');
 
-module.exports = function (name, options) {
+module.exports = function(name, options) {
   if (typeof name !== 'string') {
     options = name;
     name = null;
@@ -31,5 +31,5 @@ module.exports = function (name, options) {
       store[subname] = custom;
       return custom;
     };
-  }
+  };
 };
