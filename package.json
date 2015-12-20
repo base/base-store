@@ -61,8 +61,13 @@
       "list": [
         "base-cli",
         "base-data",
+        "base-list",
+        "base-tree",
+        "base-config",
         "base-methods",
         "base-options",
+        "base-questions",
+        "base-pipeline",
         "base-plugins"
       ]
     },
