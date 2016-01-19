@@ -5,187 +5,202 @@ require('should');
 var fs = require('fs');
 var path = require('path');
 var assert = require('assert');
-var Base = require('base-methods');
+var Base = require('base');
 var Store = require('data-store');
 var store = require('./');
 var base;
 
-describe('store', function () {
-  beforeEach(function () {
-    base = new Base();
-    base.use(store('base-data-tests'));
+describe('store', function() {
+  describe('misc', function() {
+    beforeEach(function() {
+      base = new Base();
+    });
+
+    afterEach(function() {
+      base.store.data = {};
+      base.store.del({force: true});
+    });
+
+    it('should be an instance of Store', function() {
+      base.use(store('base-data-tests'));
+      assert(base.store instanceof Store);
+    });
+
+    it('should detect store name if not passed:', function() {
+      base.use(store());
+      assert(base.store.name === 'base-store');
+    });
+
+    it('should create a store with the given `name`', function() {
+      base.use(store('foo-bar-baz'));
+      assert(base.store.name === 'foo-bar-baz');
+    });
+
+    it('should create a store at the given `cwd`', function() {
+      base.use(store('abc', {cwd: 'actual'}));
+      base.store.set('foo', 'bar');
+      path.basename(base.store.path).should.equal('abc.json');
+      base.store.data.should.have.property('foo', 'bar');
+      assert.equal(fs.existsSync(path.join(__dirname, 'actual', 'abc.json')), true);
+    });
+
+    it('should create a store using the given `indent` value', function() {
+      base.use(store('abc', {cwd: 'actual', indent: 0}));
+      base.store.set('foo', 'bar');
+      var contents = fs.readFileSync(path.join(__dirname, 'actual', 'abc.json'), 'utf8');
+      assert.equal(contents, '{"foo":"bar"}');
+    });
   });
 
-  afterEach(function () {
-    base.store.data = {};
-    base.store.del({force: true});
-  });
+  describe('methods', function() {
+    beforeEach(function() {
+      base = new Base();
+      base.use(store('base-data-tests'));
+    });
 
-  it('should be an instance of Store', function () {
-    assert(base.store instanceof Store);
-  });
+    afterEach(function() {
+      base.store.data = {};
+      base.store.del({force: true});
+    });
 
-  it('should detect store name if not passed:', function () {
-    base.use(store());
-    assert(base.store.name === 'base-store');
-  });
+    it('should `.set()` a value on the store', function() {
+      base.store.set('one', 'two');
+      base.store.data.one.should.equal('two');
+    });
 
-  it('should create a store with the given `name`', function () {
-    base.use(store('foo-bar-baz'));
-    assert(base.store.name === 'foo-bar-baz');
-  });
+    it('should `.set()` an object', function() {
+      base.store.set({four: 'five', six: 'seven'});
+      base.store.data.four.should.equal('five');
+      base.store.data.six.should.equal('seven');
+    });
 
-  it('should create a store at the given `cwd`', function () {
-    base.use(store('abc', {cwd: 'actual'}));
-    base.store.set('foo', 'bar');
-    path.basename(base.store.path).should.equal('abc.json');
-    base.store.data.should.have.property('foo', 'bar');
-    assert.equal(fs.existsSync(path.join(__dirname, 'actual', 'abc.json')), true);
-  });
+    it('should `.set()` a nested value', function() {
+      base.store.set('a.b.c.d', {e: 'f'});
+      base.store.data.a.b.c.d.e.should.equal('f');
+    });
 
-  it('should create a store using the given `indent` value', function () {
-    base.use(store('abc', {cwd: 'actual', indent: 0}));
-    base.store.set('foo', 'bar');
-    var contents = fs.readFileSync(path.join(__dirname, 'actual', 'abc.json'), 'utf8');
-    assert.equal(contents, '{"foo":"bar"}');
-  });
+    it('should `.union()` a value on the store', function() {
+      base.store.union('one', 'two');
+      base.store.data.one.should.eql(['two']);
+    });
 
-  it('should `.set()` a value on the store', function () {
-    base.store.set('one', 'two');
-    base.store.data.one.should.equal('two');
-  });
+    it('should not union duplicate values', function() {
+      base.store.union('one', 'two');
+      base.store.data.one.should.eql(['two']);
 
-  it('should `.set()` an object', function () {
-    base.store.set({four: 'five', six: 'seven'});
-    base.store.data.four.should.equal('five');
-    base.store.data.six.should.equal('seven');
-  });
+      base.store.union('one', ['two']);
+      base.store.data.one.should.eql(['two']);
+    });
 
-  it('should `.set()` a nested value', function () {
-    base.store.set('a.b.c.d', {e: 'f'});
-    base.store.data.a.b.c.d.e.should.equal('f');
-  });
+    it('should concat an existing array:', function() {
+      base.store.union('one', 'a');
+      base.store.data.one.should.eql(['a']);
 
-  it('should `.union()` a value on the store', function () {
-    base.store.union('one', 'two');
-    base.store.data.one.should.eql(['two']);
-  });
+      base.store.union('one', ['b']);
+      base.store.data.one.should.eql(['a', 'b']);
 
-  it('should not union duplicate values', function () {
-    base.store.union('one', 'two');
-    base.store.data.one.should.eql(['two']);
+      base.store.union('one', ['c', 'd']);
+      base.store.data.one.should.eql(['a', 'b', 'c', 'd']);
+    });
 
-    base.store.union('one', ['two']);
-    base.store.data.one.should.eql(['two']);
-  });
+    it('should return true if a key `.has()` on the store', function() {
+      base.store.set('foo', 'bar');
+      base.store.set('baz', null);
+      base.store.set('qux', undefined);
 
-  it('should concat an existing array:', function () {
-    base.store.union('one', 'a');
-    base.store.data.one.should.eql(['a']);
+      assert(base.store.has('foo'));
+      assert(base.store.has('baz'));
+      assert(!base.store.has('bar'));
+      assert(!base.store.has('qux'));
+    });
 
-    base.store.union('one', ['b']);
-    base.store.data.one.should.eql(['a', 'b']);
+    it('should return true if a nested key `.has()` on the store', function() {
+      base.store.set('a.b.c.d', {x: 'zzz'});
+      base.store.set('a.b.c.e', {f: null});
+      base.store.set('a.b.g.j', {k: undefined});
 
-    base.store.union('one', ['c', 'd']);
-    base.store.data.one.should.eql(['a', 'b', 'c', 'd']);
-  });
+      assert(!base.store.has('a.b.bar'));
+      assert(base.store.has('a.b.c.d'));
+      assert(base.store.has('a.b.c.d.x'));
+      assert(!base.store.has('a.b.c.d.z'));
+      assert(base.store.has('a.b.c.e'));
+      assert(base.store.has('a.b.c.e.f'));
+      assert(!base.store.has('a.b.c.e.z'));
+      assert(base.store.has('a.b.g.j'));
+      assert(!base.store.has('a.b.g.j.k'));
+      assert(!base.store.has('a.b.g.j.z'));
+    });
 
-  it('should return true if a key `.has()` on the store', function () {
-    base.store.set('foo', 'bar');
-    base.store.set('baz', null);
-    base.store.set('qux', undefined);
+     it('should return true if a key exists `.hasOwn()` on the store', function() {
+      base.store.set('foo', 'bar');
+      base.store.set('baz', null);
+      base.store.set('qux', undefined);
 
-    base.store.has('foo').should.eql(true);
-    base.store.has('bar').should.eql(false);
-    base.store.has('baz').should.eql(false);
-    base.store.has('qux').should.eql(false);
-  });
+      assert(base.store.hasOwn('foo'));
+      assert(!base.store.hasOwn('bar'));
+      assert(base.store.hasOwn('baz'));
+      assert(base.store.hasOwn('qux'));
+    });
 
-  it('should return true if a nested key `.has()` on the store', function () {
-    base.store.set('a.b.c.d', {x: 'zzz'});
-    base.store.set('a.b.c.e', {f: null});
-    base.store.set('a.b.g.j', {k: undefined});
+    it('should return true if a nested key exists `.hasOwn()` on the store', function() {
+      base.store.set('a.b.c.d', {x: 'zzz'});
+      base.store.set('a.b.c.e', {f: null});
+      base.store.set('a.b.g.j', {k: undefined});
 
-    base.store.has('a.b.bar').should.eql(false);
-    base.store.has('a.b.c.d').should.eql(true);
-    base.store.has('a.b.c.d.x').should.eql(true);
-    base.store.has('a.b.c.d.z').should.eql(false);
-    base.store.has('a.b.c.e').should.eql(true);
-    base.store.has('a.b.c.e.f').should.eql(false);
-    base.store.has('a.b.c.e.z').should.eql(false);
-    base.store.has('a.b.g.j').should.eql(true);
-    base.store.has('a.b.g.j.k').should.eql(false);
-    base.store.has('a.b.g.j.z').should.eql(false);
-  });
+      assert(!base.store.hasOwn('a.b.bar'));
+      assert(base.store.hasOwn('a.b.c.d'));
+      assert(base.store.hasOwn('a.b.c.d.x'));
+      assert(!base.store.hasOwn('a.b.c.d.z'));
+      assert(base.store.has('a.b.c.e.f'));
+      assert(base.store.hasOwn('a.b.c.e.f'));
+      assert(!base.store.hasOwn('a.b.c.e.bar'));
+      assert(!base.store.has('a.b.g.j.k'));
+      assert(base.store.hasOwn('a.b.g.j.k'));
+      assert(!base.store.hasOwn('a.b.g.j.foo'));
+    });
 
-   it('should return true if a key exists `.hasOwn()` on the store', function () {
-    base.store.set('foo', 'bar');
-    base.store.set('baz', null);
-    base.store.set('qux', undefined);
+    it('should `.get()` a stored value', function() {
+      base.store.set('three', 'four');
+      base.store.get('three').should.equal('four');
+    });
 
-    base.store.hasOwn('foo').should.eql(true);
-    base.store.hasOwn('bar').should.eql(false);
-    base.store.hasOwn('baz').should.eql(true);
-    base.store.hasOwn('qux').should.eql(true);
-  });
+    it('should `.get()` a nested value', function() {
+      base.store.set({a: {b: {c: 'd'}}});
+      base.store.get('a.b.c').should.equal('d');
+    });
 
-  it('should return true if a nested key exists `.hasOwn()` on the store', function () {
-    base.store.set('a.b.c.d', {x: 'zzz'});
-    base.store.set('a.b.c.e', {f: null});
-    base.store.set('a.b.g.j', {k: undefined});
+    it('should `.del()` a stored value', function() {
+      base.store.set('a', 'b');
+      base.store.set('c', 'd');
+      base.store.data.should.have.property('a');
+      base.store.data.should.have.property('c');
 
-    base.store.hasOwn('a.b.bar').should.eql(false);
-    base.store.hasOwn('a.b.c.d').should.eql(true);
-    base.store.hasOwn('a.b.c.d.x').should.eql(true);
-    base.store.hasOwn('a.b.c.d.z').should.eql(false);
-    base.store.has('a.b.c.e.f').should.eql(false);
-    base.store.hasOwn('a.b.c.e.f').should.eql(true);
-    base.store.hasOwn('a.b.c.e.bar').should.eql(false);
-    base.store.has('a.b.g.j.k').should.eql(false);
-    base.store.hasOwn('a.b.g.j.k').should.eql(true);
-    base.store.hasOwn('a.b.g.j.foo').should.eql(false);
-  });
+      base.store.del('a');
+      base.store.del('c');
+      base.store.data.should.not.have.property('a');
+      base.store.data.should.not.have.property('c');
+    });
 
-  it('should `.get()` a stored value', function () {
-    base.store.set('three', 'four');
-    base.store.get('three').should.equal('four');
-  });
-
-  it('should `.get()` a nested value', function () {
-    base.store.set({a: {b: {c: 'd'}}});
-    base.store.get('a.b.c').should.equal('d');
-  });
-
-  it('should `.del()` a stored value', function () {
-    base.store.set('a', 'b');
-    base.store.set('c', 'd');
-    base.store.data.should.have.property('a');
-    base.store.data.should.have.property('c');
-
-    base.store.del('a');
-    base.store.del('c');
-    base.store.data.should.not.have.property('a');
-    base.store.data.should.not.have.property('c');
-  });
-
-  it('should `.del()` multiple stored values', function () {
-    base.store.set('a', 'b');
-    base.store.set('c', 'd');
-    base.store.set('e', 'f');
-    base.store.del(['a', 'c', 'e']);
-    base.store.data.should.eql({});
+    it('should `.del()` multiple stored values', function() {
+      base.store.set('a', 'b');
+      base.store.set('c', 'd');
+      base.store.set('e', 'f');
+      base.store.del(['a', 'c', 'e']);
+      base.store.data.should.eql({});
+    });
   });
 });
 
-describe('create', function () {
-  beforeEach(function () {
+describe('create', function() {
+  beforeEach(function() {
+    base = new Base();
     base.use(store('abc'));
 
     // init the actual store json file
     base.store.set('a', 'b');
   });
 
-  afterEach(function () {
+  afterEach(function() {
     base.store.data = {};
     base.store.del({force: true});
   });
@@ -230,19 +245,20 @@ describe('create', function () {
   });
 });
 
-describe('events', function () {
-  beforeEach(function () {
+describe('events', function() {
+  beforeEach(function() {
+    base = new Base();
     base.use(store('abc'));
   });
 
-  afterEach(function () {
+  afterEach(function() {
     base.store.data = {};
     base.store.del({force: true});
   });
 
-  it('should emit `set` when an object is set:', function () {
+  it('should emit `set` when an object is set:', function() {
     var keys = [];
-    base.store.on('set', function (key) {
+    base.store.on('set', function(key) {
       keys.push(key);
     });
 
@@ -250,10 +266,10 @@ describe('events', function () {
     keys.should.eql(['a']);
   });
 
-  it('should emit `set` when a key/value pair is set:', function () {
+  it('should emit `set` when a key/value pair is set:', function() {
     var keys = [];
 
-    base.store.on('set', function (key) {
+    base.store.on('set', function(key) {
       keys.push(key);
     });
 
@@ -261,10 +277,10 @@ describe('events', function () {
     keys.should.eql(['a']);
   });
 
-  it('should emit `set` when an object value is set:', function () {
+  it('should emit `set` when an object value is set:', function() {
     var keys = [];
 
-    base.store.on('set', function (key) {
+    base.store.on('set', function(key) {
       keys.push(key);
     });
 
@@ -272,10 +288,10 @@ describe('events', function () {
     keys.should.eql(['a']);
   });
 
-  it('should emit `set` when an array of objects is passed:', function (cb) {
+  it('should emit `set` when an array of objects is passed:', function(cb) {
     var keys = [];
 
-    base.store.on('set', function (key) {
+    base.store.on('set', function(key) {
       keys.push(key);
     });
 
@@ -284,10 +300,10 @@ describe('events', function () {
     cb();
   });
 
-  it('should emit `has`:', function (cb) {
+  it('should emit `has`:', function(cb) {
     var keys = [];
 
-    base.store.on('has', function (val) {
+    base.store.on('has', function(val) {
       assert(val);
       cb();
     });
@@ -296,8 +312,8 @@ describe('events', function () {
     base.store.has('a');
   });
 
-  it('should emit `del` when a value is delted:', function (cb) {
-    base.store.on('del', function (keys) {
+  it('should emit `del` when a value is delted:', function(cb) {
+    base.store.on('del', function(keys) {
       keys.should.eql('a');
       assert(typeof base.store.get('a') === 'undefined');
       cb();
@@ -308,10 +324,10 @@ describe('events', function () {
     base.store.del('a');
   });
 
-  it('should emit deleted keys on `del`:', function (cb) {
+  it('should emit deleted keys on `del`:', function(cb) {
     var arr = [];
 
-    base.store.on('del', function (key) {
+    base.store.on('del', function(key) {
       arr.push(key);
       assert(Object.keys(base.store.data).length === 0);
     });
@@ -325,12 +341,12 @@ describe('events', function () {
     cb();
   });
 
-  it('should throw an error if force is not passed', function () {
+  it('should throw an error if force is not passed', function() {
     base.store.set('a', 'b');
     base.store.set('c', 'd');
     base.store.set('e', 'f');
 
-    (function () {
+    (function() {
       base.store.del();
     }).should.throw('options.force is required to delete the entire cache.');
   });
