@@ -19,13 +19,21 @@ module.exports = function(name, options) {
   name = name || utils.project(process.cwd());
 
   return function(app) {
+    if (this.isRegistered('store')) return;
+
     var opts = utils.extend({}, options, app.options.store);
     var store = utils.store(name, opts);
     this.define('store', store);
 
+    /**
+     * Adds a namespaced "sub-store", where
+     * the `cwd` is in the same directory as
+     * the "parent" store.
+     */
+
     this.store.create = function(subname) {
-      var dir = path.dirname(store.path);
-      opts.cwd = path.join(dir, name);
+      var root = path.dirname(store.path);
+      opts.cwd = path.join(root, name);
 
       var custom = utils.store(subname, opts);
       store[subname] = custom;
