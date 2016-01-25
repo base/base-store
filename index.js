@@ -13,16 +13,20 @@ var utils = require('./utils');
 module.exports = function(name, options) {
   if (typeof name !== 'string') {
     options = name;
-    name = null;
+    name = undefined;
   }
 
-  name = name || utils.project(process.cwd());
+  if (typeof name === 'undefined') {
+    name = utils.project(process.cwd());
+  }
 
   return function(app) {
     if (this.isRegistered('store')) return;
 
     var opts = utils.extend({}, options, app.options.store);
     var store = utils.store(name, opts);
+    var keys;
+
     this.define('store', store);
 
     /**
@@ -35,9 +39,32 @@ module.exports = function(name, options) {
       var root = path.dirname(store.path);
       opts.cwd = path.join(root, name);
 
+      if (typeof subname === 'undefined') {
+        subname = utils.project(process.cwd());
+      }
+
+      keys = keys || (keys = getKeys(store));
+      if (keys.indexOf(subname) !== -1) {
+        throw formatError(subname);
+      }
+
       var custom = utils.store(subname, opts);
       store[subname] = custom;
       return custom;
     };
   };
 };
+
+function formatError(name) {
+  var msg = 'Cannot create store: '
+    + '"' + name + '", since '
+    + '"' + name + '" is a reserved property key. '
+    + 'Please choose a different store name.';
+  return new Error(msg);
+}
+
+function getKeys(obj) {
+  var keys = [];
+  for (var key in obj) keys.push(key);
+  return keys;
+}

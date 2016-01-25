@@ -28,12 +28,12 @@ describe('store', function() {
 
     it('should detect store name if not passed:', function() {
       base.use(store());
-      assert(base.store.name === 'base-store');
+      assert.equal(base.store.name, 'base-store');
     });
 
     it('should create a store with the given `name`', function() {
       base.use(store('foo-bar-baz'));
-      assert(base.store.name === 'foo-bar-baz');
+      assert.equal(base.store.name, 'foo-bar-baz');
     });
 
     it('should create a store at the given `cwd`', function() {
@@ -209,9 +209,24 @@ describe('create', function() {
     assert.equal(typeof base.store.create, 'function');
   });
 
-  it('should create a new store with the given name', function() {
-    var store = base.store.create('base-store/create-test');
-    assert(store.name === 'base-store/create-test');
+  it('should create a "sub-store" with the given name', function() {
+    var store = base.store.create('created');
+    assert.equal(store.name, 'created');
+  });
+
+  it('should create a "sub-store" with the project name when no name is passed', function() {
+    var store = base.store.create();
+    assert.equal(store.name, 'base-store');
+  });
+
+  it('should throw an error when a conflicting store name is used', function(cb) {
+    try {
+      base.store.create('create');
+      cb(new Error('expected an error'));
+    } catch (err) {
+      assert.equal(err.message, 'Cannot create store: "create", since "create" is a reserved property key. Please choose a different store name.');
+      cb();
+    }
   });
 
   it('should add a store object to store[name]', function() {
@@ -233,14 +248,14 @@ describe('create', function() {
   it('should set values on the custom store', function() {
     base.store.create('foo');
     base.store.foo.set('a', 'b');
-    assert(base.store.foo.data.a === 'b');
+    assert.equal(base.store.foo.data.a, 'b');
     base.store.foo.del({force: true});
   });
 
   it('should get values from the custom store', function() {
     base.store.create('foo');
     base.store.foo.set('a', 'b');
-    assert(base.store.foo.get('a') === 'b');
+    assert.equal(base.store.foo.get('a'), 'b');
     base.store.foo.del({force: true});
   });
 });
@@ -315,7 +330,7 @@ describe('events', function() {
   it('should emit `del` when a value is delted:', function(cb) {
     base.store.on('del', function(keys) {
       keys.should.eql('a');
-      assert(typeof base.store.get('a') === 'undefined');
+      assert.equal(typeof base.store.get('a'), 'undefined');
       cb();
     });
 
@@ -329,7 +344,7 @@ describe('events', function() {
 
     base.store.on('del', function(key) {
       arr.push(key);
-      assert(Object.keys(base.store.data).length === 0);
+      assert.equal(Object.keys(base.store.data).length, 0);
     });
 
     base.store.set('a', 'b');
