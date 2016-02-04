@@ -30,6 +30,14 @@ module.exports = function(name, options) {
     this.define('store', store);
 
     /**
+     * Bubble up specific events to `app`
+     */
+
+    this.store.on('set', this.emit.bind(this, 'store.set'));
+    this.store.on('get', this.emit.bind(this, 'store.get'));
+    this.store.on('del', this.emit.bind(this, 'store.del'));
+
+    /**
      * Adds a namespaced "sub-store", where
      * the `cwd` is in the same directory as
      * the "parent" store.

@@ -281,6 +281,16 @@ describe('events', function() {
     keys.should.eql(['a']);
   });
 
+  it('should emit `store.set` on app:', function() {
+    var keys = [];
+    base.on('store.set', function(key) {
+      keys.push(key);
+    });
+
+    base.store.set({a: {b: {c: 'd'}}});
+    keys.should.eql(['a']);
+  });
+
   it('should emit `set` when a key/value pair is set:', function() {
     var keys = [];
 
@@ -327,8 +337,20 @@ describe('events', function() {
     base.store.has('a');
   });
 
-  it('should emit `del` when a value is delted:', function(cb) {
+  it('should emit `del` when a value is deleted:', function(cb) {
     base.store.on('del', function(keys) {
+      keys.should.eql('a');
+      assert.equal(typeof base.store.get('a'), 'undefined');
+      cb();
+    });
+
+    base.store.set('a', {b: 'c'});
+    base.store.get('a').should.eql({b: 'c'});
+    base.store.del('a');
+  });
+
+  it('should emit `store.del` on app when a value is deleted:', function(cb) {
+    base.on('store.del', function(keys) {
       keys.should.eql('a');
       assert.equal(typeof base.store.get('a'), 'undefined');
       cb();
