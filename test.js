@@ -291,6 +291,16 @@ describe('events', function() {
     keys.should.eql(['a']);
   });
 
+  it('should emit `store` on app when store.set is called:', function() {
+    var keys = [];
+    base.on('store', function(method, key, val) {
+      keys.push(key);
+    });
+
+    base.store.set({a: {b: {c: 'd'}}});
+    keys.should.eql(['a']);
+  });
+
   it('should emit `set` when a key/value pair is set:', function() {
     var keys = [];
 
@@ -358,6 +368,18 @@ describe('events', function() {
 
     base.store.set('a', {b: 'c'});
     base.store.get('a').should.eql({b: 'c'});
+    base.store.del('a');
+  });
+
+  it('should emit `store` on app when a value is deleted:', function(cb) {
+    base.store.set('a', {b: 'c'});
+    base.store.get('a').should.eql({b: 'c'});
+
+    base.once('store', function(method, key) {
+      method.should.eql('del');
+      key.should.eql('a');
+      cb();
+    });
     base.store.del('a');
   });
 

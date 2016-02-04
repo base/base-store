@@ -33,9 +33,18 @@ module.exports = function(name, options) {
      * Bubble up specific events to `app`
      */
 
-    this.store.on('set', this.emit.bind(this, 'store.set'));
-    this.store.on('get', this.emit.bind(this, 'store.get'));
-    this.store.on('del', this.emit.bind(this, 'store.del'));
+    this.store.on('set', function(key, val) {
+      app.emit('store.set', key, val);
+      app.emit('store', 'set', key, val);
+    });
+    this.store.on('get', function(key, val) {
+      app.emit('store.get', key, val);
+      app.emit('store', 'get', key, val);
+    });
+    this.store.on('del', function(key, val) {
+      app.emit('store.del', key, val);
+      app.emit('store', 'del', key, val);
+    });
 
     /**
      * Adds a namespaced "sub-store", where
