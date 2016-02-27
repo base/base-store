@@ -39,15 +39,15 @@ describe('store', function() {
     it('should create a store at the given `cwd`', function() {
       base.use(store('abc', {cwd: 'actual'}));
       base.store.set('foo', 'bar');
-      path.basename(base.store.path).should.equal('abc.json');
+      path.basename(base.store.path).should.equal('data.json');
       base.store.data.should.have.property('foo', 'bar');
-      assert.equal(fs.existsSync(path.join(__dirname, 'actual', 'abc.json')), true);
+      assert.equal(fs.existsSync(path.join(__dirname, 'actual/abc', 'data.json')), true);
     });
 
     it('should create a store using the given `indent` value', function() {
       base.use(store('abc', {cwd: 'actual', indent: 0}));
       base.store.set('foo', 'bar');
-      var contents = fs.readFileSync(path.join(__dirname, 'actual', 'abc.json'), 'utf8');
+      var contents = fs.readFileSync(path.join(__dirname, 'actual/abc', 'data.json'), 'utf8');
       assert.equal(contents, '{"foo":"bar"}');
     });
   });
@@ -240,7 +240,7 @@ describe('create', function() {
     base.store.create('foo');
     var dir = path.dirname(base.store.path);
 
-    assert.equal(base.store.foo.path, path.join(dir, 'abc/foo.json'));
+    assert.equal(base.store.foo.path, path.join(dir, 'substores/foo.json'));
     base.store.foo.set('a', 'b');
     base.store.foo.del({force: true});
   });
