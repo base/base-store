@@ -21,7 +21,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "data-store": "^0.15.1",
+    "data-store": "^0.15.3",
     "extend-shallow": "^2.0.1",
     "lazy-cache": "^1.0.3",
     "project-name": "^0.2.4"
