@@ -15,8 +15,8 @@ module.exports = function(name, config) {
     name = undefined;
   }
 
-  return function(app) {
-    if (this.isRegistered('store')) return;
+  return function plugin(app) {
+    if (!isValidInstance(app)) return;
 
     if (typeof name === 'undefined') {
       name = utils.project(process.cwd());
@@ -43,5 +43,21 @@ module.exports = function(name, config) {
       app.emit('store.del', key, val);
       app.emit('store', 'del', key, val);
     });
+
+    return plugin;
   };
 };
+
+function isValidInstance(app) {
+  var fn = app.options.validatePlugin;
+  if (typeof fn === 'function' && !fn(app)) {
+    return false;
+  }
+  if (app.isRegistered('base-store')) {
+    return false;
+  }
+  if (app.isCollection || app.isView) {
+    return false;
+  }
+  return true;
+}
