@@ -1,7 +1,7 @@
 {
   "name": "base-store",
   "description": "Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library. Also now supports sub-stores!",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "homepage": "https://github.com/node-base/base-store",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "node-base/base-store",
