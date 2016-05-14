@@ -1,7 +1,7 @@
 {
   "name": "base-store",
   "description": "Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library. Also now supports sub-stores!",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "homepage": "https://github.com/node-base/base-store",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "node-base/base-store",
@@ -21,20 +21,20 @@
     "test": "mocha"
   },
   "dependencies": {
-    "data-store": "^0.15.3",
+    "data-store": "^0.15.5",
     "extend-shallow": "^2.0.1",
-    "lazy-cache": "^1.0.3",
-    "project-name": "^0.2.4"
+    "lazy-cache": "^2.0.1",
+    "project-name": "^0.2.5"
   },
   "devDependencies": {
-    "base": "^0.7.9",
+    "base": "^0.8.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.0.0",
-    "gulp-format-md": "^0.1.7",
-    "gulp-istanbul": "^0.10.3",
+    "gulp-format-md": "^0.1.9",
+    "gulp-istanbul": "^0.10.4",
     "gulp-mocha": "^2.2.0",
     "mocha": "^2.4.5",
-    "should": "^8.2.2"
+    "should": "^8.3.1"
   },
   "keywords": [
     "app",
