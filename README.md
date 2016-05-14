@@ -1,8 +1,8 @@
-# base-store [![NPM version](https://img.shields.io/npm/v/base-store.svg)](https://www.npmjs.com/package/base-store) [![Build Status](https://img.shields.io/travis/node-base/base-store.svg)](https://travis-ci.org/node-base/base-store)
+# base-store [![NPM version](https://img.shields.io/npm/v/base-store.svg?style=flat)](https://www.npmjs.com/package/base-store) [![NPM downloads](https://img.shields.io/npm/dm/base-store.svg?style=flat)](https://npmjs.org/package/base-store) [![Build Status](https://img.shields.io/travis/node-base/base-store.svg?style=flat)](https://travis-ci.org/node-base/base-store)
 
-> Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library. Also now supports sub-stores!
+Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library. Also now supports sub-stores!
 
-You might also be interested in [base-cli](https://github.com/jonschlinkert/base-cli).
+You might also be interested in [base-cli](https://github.com/node-base/base-cli).
 
 ## Install
 
@@ -252,20 +252,20 @@ base.store.del({force: true});
 
 Other plugins for extending [base](https://github.com/node-base/base):
 
-* [base](https://www.npmjs.com/package/base): base is the foundation for creating modular, unit testable and highly pluggable node.js applications, starting… [more](https://www.npmjs.com/package/base) | [homepage](https://github.com/node-base/base)
-* [base-cli](https://www.npmjs.com/package/base-cli): Plugin for base-methods that maps built-in methods to CLI args (also supports methods from a… [more](https://www.npmjs.com/package/base-cli) | [homepage](https://github.com/jonschlinkert/base-cli)
-* [base-config](https://www.npmjs.com/package/base-config): base-methods plugin that adds a `config` method for mapping declarative configuration values to other 'base'… [more](https://www.npmjs.com/package/base-config) | [homepage](https://github.com/jonschlinkert/base-config)
-* [base-data](https://www.npmjs.com/package/base-data): adds a `data` method to base-methods. | [homepage](https://github.com/jonschlinkert/base-data)
+* [base-cli](https://www.npmjs.com/package/base-cli): Plugin for base-methods that maps built-in methods to CLI args (also supports methods from a… [more](https://www.npmjs.com/package/base-cli) | [homepage](https://github.com/node-base/base-cli)
+* [base-config](https://www.npmjs.com/package/base-config): base-methods plugin that adds a `config` method for mapping declarative configuration values to other 'base'… [more](https://www.npmjs.com/package/base-config) | [homepage](https://github.com/node-base/base-config)
+* [base-data](https://www.npmjs.com/package/base-data): adds a `data` method to base-methods. | [homepage](https://github.com/node-base/base-data)
 * [base-list](https://www.npmjs.com/package/base-list): base-runner plugin that prompts the user to choose from a list of registered applications and… [more](https://www.npmjs.com/package/base-list) | [homepage](https://github.com/doowb/base-list)
 * [base-options](https://www.npmjs.com/package/base-options): Adds a few options methods to base-methods, like `option`, `enable` and `disable`. See the readme… [more](https://www.npmjs.com/package/base-options) | [homepage](https://github.com/jonschlinkert/base-options)
-* [base-pipeline](https://www.npmjs.com/package/base-pipeline): base-methods plugin that adds pipeline and plugin methods for dynamically composing streaming plugin pipelines. | [homepage](https://github.com/node-base/base-pipeline)
-* [base-plugins](https://www.npmjs.com/package/base-plugins): Upgrade's plugin support in base applications to allow plugins to be called any time after… [more](https://www.npmjs.com/package/base-plugins) | [homepage](https://github.com/node-base/base-plugins)
 * [base-questions](https://www.npmjs.com/package/base-questions): Plugin for base-methods that adds methods for prompting the user and storing the answers on… [more](https://www.npmjs.com/package/base-questions) | [homepage](https://github.com/node-base/base-questions)
 * [base-tree](https://www.npmjs.com/package/base-tree): Add a tree method to generate a hierarchical tree structure representing nested applications and child… [more](https://www.npmjs.com/package/base-tree) | [homepage](https://github.com/doowb/base-tree)
+* [base-pipeline](https://www.npmjs.com/package/base-pipeline): base-methods plugin that adds pipeline and plugin methods for dynamically composing streaming plugin pipelines. | [homepage](https://github.com/node-base/base-pipeline)
+* [base-plugins](https://www.npmjs.com/package/base-plugins): Upgrade's plugin support in base applications to allow plugins to be called any time after… [more](https://www.npmjs.com/package/base-plugins) | [homepage](https://github.com/node-base/base-plugins)
+* [base](https://www.npmjs.com/package/base): base is the foundation for creating modular, unit testable and highly pluggable node.js applications, starting… [more](https://www.npmjs.com/package/base) | [homepage](https://github.com/node-base/base)
 
 ## Contributing
 
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/jonschlinkert/base-store/issues/new).
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/node-base/base-store/issues/new).
 
 ## Building docs
 
@@ -298,9 +298,9 @@ $ npm install -d && npm test
 
 ## License
 
-Copyright © 2016 [Jon Schlinkert](https://github.com/jonschlinkert)
+Copyright © 2016, [Jon Schlinkert](https://github.com/jonschlinkert).
 Released under the [MIT license](https://github.com/node-base/base-store/blob/master/LICENSE).
 
 ***
 
-_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on March 17, 2016._
+_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on May 14, 2016._
