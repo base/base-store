@@ -16,8 +16,9 @@ module.exports = function(name, config) {
   }
 
   return function plugin(app) {
-    if (!isValidInstance(app)) return;
+    if (!utils.isValid(app)) return;
 
+    // if `name` is not passed, get the project name
     if (typeof name === 'undefined') {
       name = utils.project(process.cwd());
     }
@@ -26,7 +27,7 @@ module.exports = function(name, config) {
     this.define('store', utils.store(name, opts));
 
     /**
-     * Bubble up specific events to `app`
+     * Bubble up a few events to `app`
      */
 
     this.store.on('set', function(key, val) {
@@ -47,17 +48,3 @@ module.exports = function(name, config) {
     return plugin;
   };
 };
-
-function isValidInstance(app) {
-  var fn = app.options.validatePlugin;
-  if (typeof fn === 'function' && !fn(app)) {
-    return false;
-  }
-  if (typeof app.isRegistered !== 'function' || app.isRegistered('base-store')) {
-    return false;
-  }
-  if (app.isCollection || app.isView) {
-    return false;
-  }
-  return true;
-}

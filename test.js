@@ -10,20 +10,32 @@ var Store = require('data-store');
 var store = require('./');
 var base;
 
-describe('store', function() {
-  describe('misc', function() {
+describe('base-store', function() {
+  describe('plugin', function() {
+    it('should be an instance of Store', function() {
+      var base = new Base();
+      base.isApp = true;
+      base.use(store('base-data-tests'));
+      assert(base.store instanceof Store);
+    });
+
+    it('should not register when `isApp` is not true', function() {
+      var base = new Base();
+      base.isApp = false;
+      base.use(store('base-data-tests'));
+      assert.equal(typeof base.store, 'undefined');
+    });
+  });
+
+  describe('app.store', function() {
     beforeEach(function() {
       base = new Base();
+      base.isApp = true;
     });
 
     afterEach(function() {
       base.store.data = {};
       base.store.del({force: true});
-    });
-
-    it('should be an instance of Store', function() {
-      base.use(store('base-data-tests'));
-      assert(base.store instanceof Store);
     });
 
     it('should detect store name if not passed:', function() {
@@ -55,6 +67,7 @@ describe('store', function() {
   describe('methods', function() {
     beforeEach(function() {
       base = new Base();
+      base.isApp = true;
       base.use(store('base-data-tests'));
     });
 
@@ -194,6 +207,7 @@ describe('store', function() {
 describe('create', function() {
   beforeEach(function() {
     base = new Base();
+    base.isApp = true;
     base.use(store('abc'));
 
     // init the actual store json file
@@ -263,6 +277,7 @@ describe('create', function() {
 describe('events', function() {
   beforeEach(function() {
     base = new Base();
+    base.isApp = true;
     base.use(store('abc'));
   });
 
