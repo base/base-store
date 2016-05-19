@@ -2,7 +2,7 @@
 
 Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object that exposes all of the methods from the data-store library. Also now supports sub-stores!
 
-You might also be interested in [base-cli](https://github.com/node-base/base-cli).
+You might also be interested in [base-data](https://github.com/node-base/base-data).
 
 ## Install
 
@@ -12,42 +12,34 @@ Install with [npm](https://www.npmjs.com/):
 $ npm install base-store --save
 ```
 
-**Example**
+## Usage
 
 Adds `store` methods for doing things like this:
 
 ```js
-app.set('a', 'b'); // does NOT persist
 app.store.set('a', 'z'); // DOES persist
-
-console.log(app.get('a'));
-//=> 'b';
 console.log(app.store.get('a'));
 //=> 'z';
 ```
 
 ## API
 
-Add `store` and `base` to your application:
+Add a `.store` method to your [base](https://github.com/node-base/base) application:
 
 ```js
 var store = require('base-store');
 var Base = require('base');
 var base = new Base();
-```
 
-Register the `store` plugin with [base](https://github.com/node-base/base):
-
-```js
 // store `name` is required
 base.use(store('foo'));
 
-// pass options (like cwd) as the second arg.
+// optionally define a cwd to use for persisting the store
 // default cwd is `~/data-store/`
 base.use(store('foo', {cwd: 'a/b/c'}));
 ```
 
-**example**
+**example usage**
 
 ```js
 base.store
@@ -58,20 +50,9 @@ base.store
 console.log(base.store.get('e.f'));
 //=> 'g'
 
-console.log(base.store.get());
-//=> {name: 'app', data: {a: 'b', c: 'd', e: {f: 'g' }}}
-
 console.log(base.store.data);
 //=> {a: 'b', c: 'd', e: {f: 'g'}}
 ```
-
-### plugin params
-
-* `name` **{String}**: Store name.
-* `options` **{Object}**
-
-* `cwd` **{String}**: Current working directory for storage. If not defined, the user home directory is used, based on OS. This is the only option currently, other may be added in the future.
-* `indent` **{Number}**: Number passed to `JSON.stringify` when saving the data. Defaults to `2` if `null` or `undefined`
 
 ## Sub-stores
 
@@ -87,6 +68,25 @@ app.store.foo.set('a', 'b');
 app.store.foo.get('a');
 //=> 'b'
 ```
+
+Sub-store data is also persisted to a property on the "parent" store:
+
+```js
+// set data on a sub-store
+app.store.foo.set('a', 'b');
+
+// get the value from parent store
+app.store.get('foo.a');
+//=> 'b'
+```
+
+### plugin params
+
+* `name` **{String}**: Store name.
+* `options` **{Object}**
+
+* `cwd` **{String}**: Current working directory for storage. If not defined, the user home directory is used, based on OS. This is the only option currently, other may be added in the future.
+* `indent` **{Number}**: Number passed to `JSON.stringify` when saving the data. Defaults to `2` if `null` or `undefined`
 
 ## methods
 
@@ -250,17 +250,12 @@ base.store.del({force: true});
 
 ## Related projects
 
-Other plugins for extending [base](https://github.com/node-base/base):
+Other plugins for extending your [base](https://github.com/node-base/base) application:
 
-* [base-cli](https://www.npmjs.com/package/base-cli): Plugin for base-methods that maps built-in methods to CLI args (also supports methods from a… [more](https://www.npmjs.com/package/base-cli) | [homepage](https://github.com/node-base/base-cli)
-* [base-config](https://www.npmjs.com/package/base-config): base-methods plugin that adds a `config` method for mapping declarative configuration values to other 'base'… [more](https://www.npmjs.com/package/base-config) | [homepage](https://github.com/node-base/base-config)
-* [base-data](https://www.npmjs.com/package/base-data): adds a `data` method to base-methods. | [homepage](https://github.com/node-base/base-data)
-* [base-list](https://www.npmjs.com/package/base-list): base-runner plugin that prompts the user to choose from a list of registered applications and… [more](https://www.npmjs.com/package/base-list) | [homepage](https://github.com/doowb/base-list)
 * [base-options](https://www.npmjs.com/package/base-options): Adds a few options methods to base-methods, like `option`, `enable` and `disable`. See the readme… [more](https://www.npmjs.com/package/base-options) | [homepage](https://github.com/jonschlinkert/base-options)
-* [base-questions](https://www.npmjs.com/package/base-questions): Plugin for base-methods that adds methods for prompting the user and storing the answers on… [more](https://www.npmjs.com/package/base-questions) | [homepage](https://github.com/node-base/base-questions)
-* [base-tree](https://www.npmjs.com/package/base-tree): Add a tree method to generate a hierarchical tree structure representing nested applications and child… [more](https://www.npmjs.com/package/base-tree) | [homepage](https://github.com/doowb/base-tree)
 * [base-pipeline](https://www.npmjs.com/package/base-pipeline): base-methods plugin that adds pipeline and plugin methods for dynamically composing streaming plugin pipelines. | [homepage](https://github.com/node-base/base-pipeline)
 * [base-plugins](https://www.npmjs.com/package/base-plugins): Upgrade's plugin support in base applications to allow plugins to be called any time after… [more](https://www.npmjs.com/package/base-plugins) | [homepage](https://github.com/node-base/base-plugins)
+* [base-questions](https://www.npmjs.com/package/base-questions): Plugin for base-methods that adds methods for prompting the user and storing the answers on… [more](https://www.npmjs.com/package/base-questions) | [homepage](https://github.com/node-base/base-questions)
 * [base](https://www.npmjs.com/package/base): base is the foundation for creating modular, unit testable and highly pluggable node.js applications, starting… [more](https://www.npmjs.com/package/base) | [homepage](https://github.com/node-base/base)
 
 ## Contributing
@@ -303,4 +298,4 @@ Released under the [MIT license](https://github.com/node-base/base-store/blob/ma
 
 ***
 
-_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on May 14, 2016._
+_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on May 19, 2016._
